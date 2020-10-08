@@ -41,6 +41,13 @@ class AppLifecycleTracker : Application.ActivityLifecycleCallbacks {
     }
 
     override fun onActivityPaused(activity: Activity) {
+        /*
+         * Fix hide app recent for 2 cases:
+         * - pulldown notification > settings > recent
+         * - messenger chathead > profile in fullscreen > recent
+         * - Xiaomi accessibility button > recent
+         */
+        activity.showOrHideAppRecentThumbnail(false)
     }
 
     override fun onActivityStopped(activity: Activity) {
