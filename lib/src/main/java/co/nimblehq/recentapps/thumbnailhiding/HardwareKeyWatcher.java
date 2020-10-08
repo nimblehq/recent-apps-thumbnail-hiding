@@ -48,21 +48,29 @@ public class HardwareKeyWatcher {
         final String SYSTEM_DIALOG_REASON_KEY = "reason";
         final String SYSTEM_DIALOG_REASON_HOME_KEY = "homekey";
         final String SYSTEM_DIALOG_REASON_RECENT_APPS = "recentapps";
+        final String SYSTEM_DIALOG_REASON_RECENT_APPS_XIAOMI = "fs_gesture";
 
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(Intent.ACTION_CLOSE_SYSTEM_DIALOGS)) {
+            if (Intent.ACTION_CLOSE_SYSTEM_DIALOGS.equals(action)) {
                 String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
                 if (reason != null) {
                     Log.e(TAG, "action:" + action + ",reason:" + reason);
                     if (mListener != null) {
-                        if (reason.equals(SYSTEM_DIALOG_REASON_HOME_KEY)) {
-                            Log.d(TAG, "onHomePressed");
-                            mListener.onHomePressed();
-                        } else if (reason.equals(SYSTEM_DIALOG_REASON_RECENT_APPS)) {
-                            Log.d(TAG, "onRecentAppsPressed");
-                            mListener.onRecentAppsPressed();
+                        switch (reason) {
+                            case SYSTEM_DIALOG_REASON_HOME_KEY:
+                                Log.d(TAG, "onHomePressed (homekey)");
+                                mListener.onHomePressed();
+                                break;
+                            case SYSTEM_DIALOG_REASON_RECENT_APPS:
+                                Log.d(TAG, "onRecentAppsPressed (recentapps)");
+                                mListener.onRecentAppsPressed();
+                                break;
+                            case SYSTEM_DIALOG_REASON_RECENT_APPS_XIAOMI:
+                                Log.d(TAG, "onRecentAppsPressed (fs_gesture)");
+                                mListener.onRecentAppsPressed();
+                                break;
                         }
                     }
                 }
