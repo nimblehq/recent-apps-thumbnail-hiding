@@ -17,11 +17,11 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
             setOnHardwareKeysPressedListenerListener(object :
                 HardwareKeyWatcher.OnHardwareKeysPressedListener {
                 override fun onHomePressed() {
-                    activity.showOrHideAppRecentThumbnail(false)
+                    activity.triggerRecentAppsMode(true)
                 }
 
                 override fun onRecentAppsPressed() {
-                    activity.showOrHideAppRecentThumbnail(false)
+                    activity.triggerRecentAppsMode(true)
                 }
             })
             startWatch()
@@ -29,7 +29,7 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
     }
 
     override fun onActivityResumed(activity: Activity) {
-        activity.showOrHideAppRecentThumbnail(true)
+        activity.triggerRecentAppsMode(false)
     }
 
     override fun onActivityPaused(activity: Activity) {
@@ -39,7 +39,7 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
          * - messenger chathead > profile in fullscreen > recent
          * - Xiaomi accessibility button > recent
          */
-        activity.showOrHideAppRecentThumbnail(false)
+        activity.triggerRecentAppsMode(true)
     }
 
     override fun onActivityStopped(activity: Activity) {
@@ -53,14 +53,21 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
     override fun onActivityDestroyed(activity: Activity) {
     }
 
-    private fun Activity.showOrHideAppRecentThumbnail(show: Boolean) {
-        if (show) {
-            window.clearFlags(
+    private fun Activity.triggerRecentAppsMode(inRecentAppsMode: Boolean) {
+        when (val activity = this) {
+            is RecentAppsThumbnailHidingListener -> activity.onRecentAppsTriggered(inRecentAppsMode)
+            else -> activity.showOrHideAppRecentThumbnail(inRecentAppsMode)
+        }
+    }
+
+    private fun Activity.showOrHideAppRecentThumbnail(inRecentAppsMode: Boolean) {
+        if (inRecentAppsMode) {
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_SECURE,
                 WindowManager.LayoutParams.FLAG_SECURE
             )
         } else {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_SECURE,
+            window.clearFlags(
                 WindowManager.LayoutParams.FLAG_SECURE
             )
         }
