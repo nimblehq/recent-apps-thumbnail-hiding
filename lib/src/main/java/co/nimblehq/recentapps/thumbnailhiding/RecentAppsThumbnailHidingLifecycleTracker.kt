@@ -3,7 +3,6 @@ package co.nimblehq.recentapps.thumbnailhiding
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
-import android.view.WindowManager
 
 class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleCallbacks {
 
@@ -55,21 +54,11 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
 
     private fun Activity.triggerRecentAppsMode(inRecentAppsMode: Boolean) {
         when (val activity = this) {
-            is RecentAppsThumbnailHidingListener -> activity.onRecentAppsTriggered(inRecentAppsMode)
-            else -> activity.showOrHideAppRecentThumbnail(inRecentAppsMode)
-        }
-    }
-
-    private fun Activity.showOrHideAppRecentThumbnail(inRecentAppsMode: Boolean) {
-        if (inRecentAppsMode) {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE
-            )
-        } else {
-            window.clearFlags(
-                WindowManager.LayoutParams.FLAG_SECURE
-            )
+            is RecentAppsThumbnailHidingListener ->
+                activity.onRecentAppsTriggered(
+                    activity,
+                    inRecentAppsMode
+                )
         }
     }
 }
