@@ -12,7 +12,7 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
     }
 
     override fun onActivityStarted(activity: Activity) {
-        if (hardwareKeyWatcher != null && hardwareKeyWatcher?.context != activity) {
+        if (hardwareKeyWatcher?.context != activity) {
             hardwareKeyWatcher?.stopWatch()
             hardwareKeyWatcher = null
         }
@@ -46,7 +46,7 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
     }
 
     override fun onActivityStopped(activity: Activity) {
-        if (hardwareKeyWatcher != null && hardwareKeyWatcher?.context == activity) {
+        if (hardwareKeyWatcher?.context == activity) {
             hardwareKeyWatcher?.stopWatch()
             hardwareKeyWatcher = null
         }
