@@ -33,14 +33,20 @@ public class HardwareKeyWatcher {
 
     public void startWatch() {
         if (mReceiver != null) {
+            Log.d(TAG, "startWatch on " + mContext);
             mContext.registerReceiver(mReceiver, mFilter);
         }
     }
 
     public void stopWatch() {
         if (mReceiver != null) {
+            Log.d(TAG, "stopWatch on " + mContext);
             mContext.unregisterReceiver(mReceiver);
         }
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 
     class InnerReceiver extends BroadcastReceiver {
@@ -56,7 +62,7 @@ public class HardwareKeyWatcher {
             if (Intent.ACTION_CLOSE_SYSTEM_DIALOGS.equals(action)) {
                 String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
                 if (reason != null) {
-                    Log.e(TAG, "action:" + action + ",reason:" + reason);
+                    Log.i(TAG, "action:" + action + ", reason:" + reason);
                     if (mListener != null) {
                         switch (reason) {
                             case SYSTEM_DIALOG_REASON_HOME_KEY:
