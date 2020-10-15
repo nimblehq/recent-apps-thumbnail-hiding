@@ -12,6 +12,10 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
     }
 
     override fun onActivityStarted(activity: Activity) {
+        if (hardwareKeyWatcher != null && hardwareKeyWatcher?.context != activity) {
+            hardwareKeyWatcher?.stopWatch()
+            hardwareKeyWatcher = null
+        }
         hardwareKeyWatcher = HardwareKeyWatcher(activity).apply {
             setOnHardwareKeysPressedListenerListener(object :
                 HardwareKeyWatcher.OnHardwareKeysPressedListener {
@@ -42,8 +46,10 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
     }
 
     override fun onActivityStopped(activity: Activity) {
-        hardwareKeyWatcher?.stopWatch()
-        hardwareKeyWatcher = null
+        if (hardwareKeyWatcher != null && hardwareKeyWatcher?.context == activity) {
+            hardwareKeyWatcher?.stopWatch()
+            hardwareKeyWatcher = null
+        }
     }
 
     override fun onActivitySaveInstanceState(activity: Activity, outState: Bundle) {

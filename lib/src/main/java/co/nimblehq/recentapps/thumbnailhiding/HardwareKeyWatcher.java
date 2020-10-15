@@ -33,14 +33,20 @@ public class HardwareKeyWatcher {
 
     public void startWatch() {
         if (mReceiver != null) {
+            Log.d(TAG, "startWatch on " + mContext);
             mContext.registerReceiver(mReceiver, mFilter);
         }
     }
 
     public void stopWatch() {
         if (mReceiver != null) {
+            Log.d(TAG, "stopWatch on " + mContext);
             mContext.unregisterReceiver(mReceiver);
         }
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 
     class InnerReceiver extends BroadcastReceiver {
