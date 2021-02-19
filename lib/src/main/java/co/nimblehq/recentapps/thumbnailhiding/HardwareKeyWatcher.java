@@ -62,7 +62,7 @@ public class HardwareKeyWatcher {
             if (Intent.ACTION_CLOSE_SYSTEM_DIALOGS.equals(action)) {
                 String reason = intent.getStringExtra(SYSTEM_DIALOG_REASON_KEY);
                 if (reason != null) {
-                    Log.i(TAG, "action:" + action + ", reason:" + reason);
+                    logForInfo("action:" + action + ", reason:" + reason);
                     if (mListener != null) {
                         switch (reason) {
                             case SYSTEM_DIALOG_REASON_HOME_KEY:
@@ -87,6 +87,12 @@ public class HardwareKeyWatcher {
     private void logForDebugging(String message) {
         if (BuildConfig.DEBUG) {
             Log.d(TAG, message);
+        }
+    }
+
+    private void logForInfo(String message) {
+        if (BuildConfig.DEBUG) {
+            Log.i(TAG, message);
         }
     }
 }
