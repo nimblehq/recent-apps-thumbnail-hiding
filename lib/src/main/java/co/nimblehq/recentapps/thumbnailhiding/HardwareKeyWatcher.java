@@ -86,7 +86,7 @@ public class HardwareKeyWatcher {
 
     private void logForDebugging(String message) {
         if (BuildConfig.DEBUG) {
-            Log.i(TAG, message);
+            Log.d(TAG, message);
         }
     }
 }
