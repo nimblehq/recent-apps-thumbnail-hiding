@@ -33,14 +33,14 @@ public class HardwareKeyWatcher {
 
     public void startWatch() {
         if (mReceiver != null) {
-            Log.d(TAG, "startWatch on " + mContext);
+            logForDebugging("startWatch on " + mContext);
             mContext.registerReceiver(mReceiver, mFilter);
         }
     }
 
     public void stopWatch() {
         if (mReceiver != null) {
-            Log.d(TAG, "stopWatch on " + mContext);
+            logForDebugging("stopWatch on " + mContext);
             mContext.unregisterReceiver(mReceiver);
         }
     }
@@ -66,21 +66,27 @@ public class HardwareKeyWatcher {
                     if (mListener != null) {
                         switch (reason) {
                             case SYSTEM_DIALOG_REASON_HOME_KEY:
-                                Log.d(TAG, "onHomePressed (homekey)");
+                                logForDebugging("onHomePressed (homekey)");
                                 mListener.onHomePressed();
                                 break;
                             case SYSTEM_DIALOG_REASON_RECENT_APPS:
-                                Log.d(TAG, "onRecentAppsPressed (recentapps)");
+                                logForDebugging("onRecentAppsPressed (recentapps)");
                                 mListener.onRecentAppsPressed();
                                 break;
                             case SYSTEM_DIALOG_REASON_RECENT_APPS_XIAOMI:
-                                Log.d(TAG, "onRecentAppsPressed (fs_gesture)");
+                                logForDebugging("onRecentAppsPressed (fs_gesture)");
                                 mListener.onRecentAppsPressed();
                                 break;
                         }
                     }
                 }
             }
+        }
+    }
+
+    private void logForDebugging(String message) {
+        if (BuildConfig.DEBUG) {
+            Log.d(TAG, message);
         }
     }
 }
