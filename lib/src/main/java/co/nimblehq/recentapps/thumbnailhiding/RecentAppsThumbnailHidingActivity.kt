@@ -7,11 +7,18 @@ import androidx.appcompat.app.AppCompatActivity
 
 abstract class RecentAppsThumbnailHidingActivity : AppCompatActivity(), RecentAppsThumbnailHidingListener {
 
-    open val enableSecureFlagOnLowApiDevices: Boolean = false
+    protected open val enableSecureFlagOnLowApiDevices: Boolean = false
+
+    /**
+     * HardwareKeyWatcher doesn't work on API 25 or lowers,
+     * allow to use FLAG_SECURE instead to hide app thumbnail.
+     */
+    val isSecureFlagEnabled: Boolean
+        get() = enableSecureFlagOnLowApiDevices && Build.VERSION.SDK_INT < Build.VERSION_CODES.O
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (enableSecureFlagOnLowApiDevices && Build.VERSION.SDK_INT < Build.VERSION_CODES.O) {
+        if (isSecureFlagEnabled) {
             window.setFlags(
                 WindowManager.LayoutParams.FLAG_SECURE,
                 WindowManager.LayoutParams.FLAG_SECURE
