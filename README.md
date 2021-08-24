@@ -2,7 +2,7 @@
 
 [![](https://jitpack.io/v/nimblehq/recent-apps-thumbnail-hiding.svg)](https://jitpack.io/#nimblehq/recent-apps-thumbnail-hiding)
 
-Hide app thumbnail in Android Recent Apps
+Hide app thumbnail in [Android Recent Apps](https://developer.android.com/guide/components/activities/recents)
 
 ![20201014_171755](https://user-images.githubusercontent.com/16315358/95976377-9c20f200-0e41-11eb-99e3-bf1abf6406df.gif)
 
@@ -17,7 +17,9 @@ allprojects {
     }
 }
 ```
+
 **Step 2.** Add the dependency
+
 ```groovy
 dependencies {
     implementation 'com.github.nimblehq:recent-apps-thumbnail-hiding:[LATEST_VERSION]'
@@ -26,8 +28,11 @@ dependencies {
 
 ## Usage
 
-- Register `RecentAppsThumbnailHidingLifecycleTracker` in Application layer
-```
+-
+Register [RecentAppsThumbnailHidingLifecycleTracker](https://github.com/nimblehq/recent-apps-thumbnail-hiding/blob/master/app/src/main/java/co/nimblehq/recentapps/thumbnailhiding/App.kt#L9)
+in Application layer.
+
+```kotlin
 class MyApplication : Application() {
 
     override fun onCreate() {
@@ -37,15 +42,25 @@ class MyApplication : Application() {
 
 }
 ```
-- Implement [RecentAppsThumbnailHidingListener](https://github.com/nimblehq/recent-apps-thumbnail-hiding/blob/eaf27aea6ffbbacff65af23a05dd26fb698c5025/lib/src/main/java/co/nimblehq/recentapps/thumbnailhiding/RecentAppsThumbnailHidingListener.kt#L21-L30) in your activity or base activity. By default, the library uses [FLAG_SECURE](https://developer.android.com/reference/android/view/WindowManager.LayoutParams#FLAG_SECURE) to hide app thumbnail but it will produce a side-effect that sometimes that flag can't be set/unset fast enough or it blocks the user to take the screenshot.
-```
+
+-
+Implement [RecentAppsThumbnailHidingListener](https://github.com/nimblehq/recent-apps-thumbnail-hiding/blob/eaf27aea6ffbbacff65af23a05dd26fb698c5025/lib/src/main/java/co/nimblehq/recentapps/thumbnailhiding/RecentAppsThumbnailHidingListener.kt#L21-L30)
+in your activity or base activity. By default, the library
+uses [FLAG_SECURE](https://developer.android.com/reference/android/view/WindowManager.LayoutParams#FLAG_SECURE) to hide
+app thumbnail but it will produce side-effects that sometimes the flag can't be set/unset fast enough (not stable) or it
+blocks the user to take the screenshot.
+
+```kotlin
 class MainActivity : Activity(), RecentAppsThumbnailHidingListener {
 
 }
 ```
-- Or, we could override `onRecentAppsTriggered` to show your custom layout for app thumbnail in Recent Apps list
 
-```
+- Or,
+  override [onRecentAppsTriggered](https://github.com/nimblehq/recent-apps-thumbnail-hiding/blob/master/app/src/main/java/co/nimblehq/recentapps/thumbnailhiding/MainActivity.kt#L18-L23)
+  to show your custom layout for app thumbnail in Recent Apps list.
+
+```kotlin
 class MainActivity : Activity(), RecentAppsThumbnailHidingListener {
 
     override fun onRecentAppsTriggered(activity: Activity, inRecentAppsMode: Boolean) {
@@ -55,10 +70,37 @@ class MainActivity : Activity(), RecentAppsThumbnailHidingListener {
 }
 ```
 
+> Checkout the custom thumbnail layout sample to see more detail [here](https://github.com/nimblehq/recent-apps-thumbnail-hiding/blob/master/app/src/main/res/layout/activity_main.xml#L26-L33)
+
+### Low API support (25 and lowers)
+
+The core approach `HardwareKeyWatcher` in this
+lib [doesn't work on API 25 and lowers](https://docs.google.com/spreadsheets/d/1znmSllEYHuOhmla7EWFXYeWuv1EZQiVkB9Mibhcj52s/edit?usp=sharing)
+. In order to provide an option to cover the hiding app thumbnail on more and more devices, this lib adds support to
+apply [FLAG_SECURE](https://developer.android.com/reference/android/view/WindowManager.LayoutParams#FLAG_SECURE). This
+support is provided as an *option* and *disabled* by default, to enable it, extend your activity
+to `RecentAppsThumbnailHidingActivity` and override `enableSecureFlagOnLowApiDevices = true`.
+
+```kotlin
+class MainActivity : RecentAppsThumbnailHidingActivity() {
+
+    // On API 25 and lowers: use FLAG_SECURE
+    override val enableSecureFlagOnLowApiDevices: Boolean = true
+
+    // On API 26 or later: use custom app logo
+    override fun onRecentAppsTriggered(activity: Activity, inRecentAppsMode: Boolean) {
+        ivRecentAppThumbnail.visibleOrGone(inRecentAppsMode)
+    }
+
+}
+```
+
+> ⚠️ Note that, besides supporting to hide app thumbnail, this flag will not support to show a custom Recent Apps thumbnail layout, also blocks the user to capture app screenshot.
+
 ## License
 
-This project is Copyright (c) 2014-2021 Nimble. It is free software,
-and may be redistributed under the terms specified in the [LICENSE] file.
+This project is Copyright (c) 2014-2021 Nimble. It is free software, and may be redistributed under the terms specified
+in the [LICENSE] file.
 
 [LICENSE]: /LICENSE
 
