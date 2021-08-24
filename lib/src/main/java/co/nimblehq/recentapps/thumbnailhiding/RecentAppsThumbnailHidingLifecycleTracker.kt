@@ -60,8 +60,8 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
 
     /**
      * Only trigger `onRecentAppsTriggered` if the activity
-     * - implements RecentAppsThumbnailHidingListener
-     * - or extends RecentAppsThumbnailHidingActivity with enableSecureFlagOnLowApiDevices disabled
+     * - implements RecentAppsThumbnailHidingListener or
+     * - extends RecentAppsThumbnailHidingActivity with enableSecureFlagOnLowApiDevices disabled or API 26 (or later)
      */
     private fun Activity.triggerRecentAppsMode(inRecentAppsMode: Boolean) {
         when (val activity = this) {
