@@ -1,9 +1,10 @@
-package co.nimblehq.recentapps.thumbnailhiding
+package co.nimblehq.recentapps.thumbnailhiding.sample
 
 import android.app.Activity
 import android.os.Bundle
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import co.nimblehq.recentapps.thumbnailhiding.RecentAppsThumbnailHidingActivity
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : RecentAppsThumbnailHidingActivity() {

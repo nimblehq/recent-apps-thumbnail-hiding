@@ -1,6 +1,7 @@
-package co.nimblehq.recentapps.thumbnailhiding
+package co.nimblehq.recentapps.thumbnailhiding.sample
 
 import android.app.Application
+import co.nimblehq.recentapps.thumbnailhiding.RecentAppsThumbnailHidingLifecycleTracker
 
 class App : Application() {
 
