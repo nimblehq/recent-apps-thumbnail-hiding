@@ -45,7 +45,7 @@ public final class NavigationBarObserver extends ContentObserver {
         this.activityContext = context;
         this.context = context.getApplicationContext();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
-            context.getContentResolver() != null && !mIsRegister) {
+                context.getContentResolver() != null && !mIsRegister) {
             Uri uri = null;
             if (OSUtils.isMIUI()) {
                 uri = Settings.Global.getUriFor(IMMERSION_MIUI_NAVIGATION_BAR_HIDE_SHOW);
@@ -70,20 +70,10 @@ public final class NavigationBarObserver extends ContentObserver {
     @Override
     public void onChange(boolean selfChange) {
         super.onChange(selfChange);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 && context != null && context.getContentResolver() != null
-            && mListeners != null && !mListeners.isEmpty()) {
-            int show = 0;
-            if (OSUtils.isMIUI()) {
-                show = Settings.Global.getInt(context.getContentResolver(), IMMERSION_MIUI_NAVIGATION_BAR_HIDE_SHOW, 0);
-            } else if (OSUtils.isEMUI()) {
-                if (OSUtils.isEMUI3_x() || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                    show = Settings.System.getInt(context.getContentResolver(), IMMERSION_EMUI_NAVIGATION_BAR_HIDE_SHOW, 0);
-                } else {
-                    show = Settings.Global.getInt(context.getContentResolver(), IMMERSION_EMUI_NAVIGATION_BAR_HIDE_SHOW, 0);
-                }
-            }
+        if (mListeners != null && !mListeners.isEmpty()) {
+            boolean show = isNavigationBarShowing(context);
             for (OnNavigationBarListener onNavigationBarListener : mListeners) {
-                onNavigationBarListener.onNavigationBarChange(show != 1);
+                onNavigationBarListener.onNavigationBarChange(show);
             }
         }
     }
@@ -117,7 +107,24 @@ public final class NavigationBarObserver extends ContentObserver {
     }
 
     public static boolean isAvailable() {
-        return OSUtils.isMIUI() || OSUtils.isEMUI();
+        return (OSUtils.isMIUI() || OSUtils.isEMUI()) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
+    }
+
+    public static boolean isNavigationBarShowing(Context context) {
+        int show = 0;
+        Context appContext = context.getApplicationContext();
+        if (isAvailable() && appContext != null && appContext.getContentResolver() != null) {
+            if (OSUtils.isMIUI()) {
+                show = Settings.Global.getInt(appContext.getContentResolver(), IMMERSION_MIUI_NAVIGATION_BAR_HIDE_SHOW, 0);
+            } else if (OSUtils.isEMUI()) {
+                if (OSUtils.isEMUI3_x() || Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+                    show = Settings.System.getInt(appContext.getContentResolver(), IMMERSION_EMUI_NAVIGATION_BAR_HIDE_SHOW, 0);
+                } else {
+                    show = Settings.Global.getInt(appContext.getContentResolver(), IMMERSION_EMUI_NAVIGATION_BAR_HIDE_SHOW, 0);
+                }
+            }
+        }
+        return show != 1;
     }
 
     private static class NavigationBarObserverInstance {

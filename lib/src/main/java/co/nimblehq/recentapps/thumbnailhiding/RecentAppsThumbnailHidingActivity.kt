@@ -3,8 +3,10 @@ package co.nimblehq.recentapps.thumbnailhiding
 import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import co.nimblehq.recentapps.thumbnailhiding.navbar.NavigationBarObserver
 
-abstract class RecentAppsThumbnailHidingActivity : AppCompatActivity(), RecentAppsThumbnailHidingListener {
+abstract class RecentAppsThumbnailHidingActivity : AppCompatActivity(),
+    RecentAppsThumbnailHidingListener {
 
     protected open val enableSecureFlagOnLowApiDevices: Boolean = false
 
@@ -17,7 +19,7 @@ abstract class RecentAppsThumbnailHidingActivity : AppCompatActivity(), RecentAp
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (isSecureFlagEnabled) {
+        if (isSecureFlagEnabled || !NavigationBarObserver.isNavigationBarShowing(this)) {
             enableSecureFlag(true)
         }
     }
