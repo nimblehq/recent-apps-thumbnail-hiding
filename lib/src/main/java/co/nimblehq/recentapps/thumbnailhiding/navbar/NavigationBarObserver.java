@@ -71,9 +71,9 @@ public final class NavigationBarObserver extends ContentObserver {
     public void onChange(boolean selfChange) {
         super.onChange(selfChange);
         if (mListeners != null && !mListeners.isEmpty()) {
-            boolean show = isNavigationBarShowing(context);
+            boolean enabled = isNavigationGestureEnabled(context);
             for (OnNavigationBarListener onNavigationBarListener : mListeners) {
-                onNavigationBarListener.onNavigationBarChange(show);
+                onNavigationBarListener.onNavigationBarChange(enabled);
             }
         }
     }
@@ -110,7 +110,7 @@ public final class NavigationBarObserver extends ContentObserver {
         return (OSUtils.isMIUI() || OSUtils.isEMUI()) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1;
     }
 
-    public static boolean isNavigationBarShowing(Context context) {
+    public static boolean isNavigationGestureEnabled(Context context) {
         int show = 0;
         Context appContext = context.getApplicationContext();
         if (isAvailable() && appContext != null && appContext.getContentResolver() != null) {
@@ -124,7 +124,7 @@ public final class NavigationBarObserver extends ContentObserver {
                 }
             }
         }
-        return show != 1;
+        return show != 0;
     }
 
     private static class NavigationBarObserverInstance {

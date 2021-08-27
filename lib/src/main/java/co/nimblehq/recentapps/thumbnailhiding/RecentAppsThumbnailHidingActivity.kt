@@ -21,7 +21,7 @@ abstract class RecentAppsThumbnailHidingActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (isSecureFlagEnabled || !NavigationBarObserver.isNavigationBarShowing(this)) {
+        if (isSecureFlagEnabled || NavigationBarObserver.isNavigationGestureEnabled(this)) {
             enableSecureFlag(true)
         }
     }

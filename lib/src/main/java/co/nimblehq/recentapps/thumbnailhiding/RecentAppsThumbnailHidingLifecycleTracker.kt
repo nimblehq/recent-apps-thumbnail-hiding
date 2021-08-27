@@ -22,8 +22,8 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
                 navigationBarObserver = null
                 navigationBarListener = null
             }
-            navigationBarListener = OnNavigationBarListener { inGestureNavigationMode ->
-                activity.enableSecureFlag(!inGestureNavigationMode)
+            navigationBarListener = OnNavigationBarListener { isGestureEnabled ->
+                activity.enableSecureFlag(isGestureEnabled)
             }
             navigationBarObserver = NavigationBarObserver.getInstance().apply {
                 register(activity)
