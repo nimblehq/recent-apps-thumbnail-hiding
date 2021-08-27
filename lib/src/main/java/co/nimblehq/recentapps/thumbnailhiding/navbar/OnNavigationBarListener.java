@@ -11,7 +11,7 @@ public interface OnNavigationBarListener {
     /**
      * On navigation bar change.
      *
-     * @param show the show
+     * @param isGestureEnabled
      */
-    void onNavigationBarChange(boolean show);
+    void onNavigationBarChange(boolean isGestureEnabled);
 }
