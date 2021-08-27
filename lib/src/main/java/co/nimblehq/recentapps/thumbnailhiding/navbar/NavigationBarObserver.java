@@ -28,6 +28,8 @@ public final class NavigationBarObserver extends ContentObserver {
     static final String IMMERSION_EMUI_NAVIGATION_BAR_HIDE_SHOW = "navigationbar_is_min";
 
     private ArrayList<OnNavigationBarListener> mListeners;
+    // FIXME get rid of temporary activityContext
+    private Context activityContext;
     private Context context;
     private Boolean mIsRegister = false;
 
@@ -40,6 +42,7 @@ public final class NavigationBarObserver extends ContentObserver {
     }
 
     public void register(Context context) {
+        this.activityContext = context;
         this.context = context.getApplicationContext();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1 &&
             context.getContentResolver() != null && !mIsRegister) {
@@ -58,6 +61,10 @@ public final class NavigationBarObserver extends ContentObserver {
                 mIsRegister = true;
             }
         }
+    }
+
+    public void unregister() {
+        context.getContentResolver().unregisterContentObserver(this);
     }
 
     @Override
@@ -103,6 +110,14 @@ public final class NavigationBarObserver extends ContentObserver {
             return;
         }
         mListeners.remove(listener);
+    }
+
+    public Context getActivityContext() {
+        return activityContext;
+    }
+
+    public static boolean isAvailable() {
+        return OSUtils.isMIUI() || OSUtils.isEMUI();
     }
 
     private static class NavigationBarObserverInstance {
