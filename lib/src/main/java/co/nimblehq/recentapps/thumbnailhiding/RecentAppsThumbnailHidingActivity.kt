@@ -1,7 +1,9 @@
 package co.nimblehq.recentapps.thumbnailhiding
 
+import android.app.Activity
 import android.os.Build
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import co.nimblehq.recentapps.thumbnailhiding.navbar.NavigationBarObserver
 
@@ -22,5 +24,18 @@ abstract class RecentAppsThumbnailHidingActivity : AppCompatActivity(),
         if (isSecureFlagEnabled || !NavigationBarObserver.isNavigationBarShowing(this)) {
             enableSecureFlag(true)
         }
+    }
+}
+
+fun Activity.enableSecureFlag(enable: Boolean) {
+    if (enable) {
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_SECURE,
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
+    } else {
+        window.clearFlags(
+            WindowManager.LayoutParams.FLAG_SECURE
+        )
     }
 }
