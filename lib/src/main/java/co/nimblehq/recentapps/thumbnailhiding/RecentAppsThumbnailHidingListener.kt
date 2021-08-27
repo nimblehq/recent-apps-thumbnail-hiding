@@ -16,17 +16,17 @@ interface RecentAppsThumbnailHidingListener {
     ) {
         activity.enableSecureFlag(inRecentAppsMode)
     }
+}
 
-    fun Activity.enableSecureFlag(enable: Boolean) {
-        if (enable) {
-            window.setFlags(
+fun Activity.enableSecureFlag(enable: Boolean) {
+    if (enable) {
+        window.setFlags(
                 WindowManager.LayoutParams.FLAG_SECURE,
                 WindowManager.LayoutParams.FLAG_SECURE
-            )
-        } else {
-            window.clearFlags(
+        )
+    } else {
+        window.clearFlags(
                 WindowManager.LayoutParams.FLAG_SECURE
-            )
-        }
+        )
     }
 }

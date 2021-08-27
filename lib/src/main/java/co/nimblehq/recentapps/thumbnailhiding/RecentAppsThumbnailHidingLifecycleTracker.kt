@@ -3,12 +3,33 @@ package co.nimblehq.recentapps.thumbnailhiding
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import co.nimblehq.recentapps.thumbnailhiding.navbar.NavigationBarObserver
+import co.nimblehq.recentapps.thumbnailhiding.navbar.OnNavigationBarListener
 
 class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleCallbacks {
 
     private var hardwareKeyWatcher: HardwareKeyWatcher? = null
 
+    // Detect custom gesture navigation enabled on Xiaomi or Huawei devices to switch to use FLAG_SECURE
+    private var navigationBarObserver: NavigationBarObserver? = null
+    private var navigationBarListener: OnNavigationBarListener? = null
+
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        if (NavigationBarObserver.isAvailable()) {
+            if (navigationBarObserver?.activityContext != activity) {
+                navigationBarObserver?.unregister()
+                navigationBarObserver?.removeOnNavigationBarListener(navigationBarListener)
+                navigationBarObserver = null
+                navigationBarListener = null
+            }
+            navigationBarListener = OnNavigationBarListener { inGestureNavigationMode ->
+                activity.enableSecureFlag(!inGestureNavigationMode)
+            }
+            navigationBarObserver = NavigationBarObserver.getInstance().apply {
+                register(activity)
+                addOnNavigationBarListener(navigationBarListener)
+            }
+        }
     }
 
     override fun onActivityStarted(activity: Activity) {
@@ -56,6 +77,12 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
     }
 
     override fun onActivityDestroyed(activity: Activity) {
+        if (NavigationBarObserver.isAvailable() && navigationBarObserver?.activityContext == activity) {
+            navigationBarObserver?.unregister()
+            navigationBarObserver?.removeOnNavigationBarListener(navigationBarListener)
+            navigationBarObserver = null
+            navigationBarListener = null
+        }
     }
 
     /**
