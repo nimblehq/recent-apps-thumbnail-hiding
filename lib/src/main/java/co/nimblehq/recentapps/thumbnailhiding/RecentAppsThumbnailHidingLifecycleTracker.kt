@@ -23,7 +23,11 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
                 navigationBarListener = null
             }
             navigationBarListener = OnNavigationBarListener { isGestureEnabled ->
-                activity.enableSecureFlag(isGestureEnabled)
+                if (activity is RecentAppsThumbnailHidingActivity
+                    && activity.enableSecureFlagOnDevicesWithCustomGestureNavigation
+                ) {
+                    activity.enableSecureFlag(isGestureEnabled)
+                }
             }
             navigationBarObserver = NavigationBarObserver.getInstance().apply {
                 register(activity)
@@ -92,7 +96,7 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
      */
     private fun Activity.triggerRecentAppsMode(inRecentAppsMode: Boolean) {
         when (val activity = this) {
-            is RecentAppsThumbnailHidingActivity -> if (!activity.isSecureFlagEnabled)
+            is RecentAppsThumbnailHidingActivity -> if (!activity.isSecureFlagEnabled())
                 activity.onRecentAppsTriggered(activity, inRecentAppsMode)
             is RecentAppsThumbnailHidingListener ->
                 activity.onRecentAppsTriggered(activity, inRecentAppsMode)
