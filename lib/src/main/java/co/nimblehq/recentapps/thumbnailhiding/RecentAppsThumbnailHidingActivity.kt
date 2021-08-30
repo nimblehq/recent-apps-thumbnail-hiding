@@ -9,7 +9,7 @@ abstract class RecentAppsThumbnailHidingActivity : AppCompatActivity(), RecentAp
     protected open val enableSecureFlagOnLowApiDevices: Boolean = false
 
     /**
-     * HardwareKeyWatcher doesn't work on API 25 or lowers,
+     * HardwareKeyWatcher doesn't work on API 25 or lower,
      * allow to use FLAG_SECURE instead to hide app thumbnail.
      */
     val isSecureFlagEnabled: Boolean

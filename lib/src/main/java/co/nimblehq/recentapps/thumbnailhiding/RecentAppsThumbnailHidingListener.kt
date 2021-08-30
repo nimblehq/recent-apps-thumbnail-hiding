@@ -17,8 +17,8 @@ interface RecentAppsThumbnailHidingListener {
         activity.enableSecureFlag(inRecentAppsMode)
     }
 
-    fun Activity.enableSecureFlag(enable: Boolean) {
-        if (enable) {
+    fun Activity.enableSecureFlag(isEnabled: Boolean) {
+        if (isEnabled) {
             window.setFlags(
                 WindowManager.LayoutParams.FLAG_SECURE,
                 WindowManager.LayoutParams.FLAG_SECURE

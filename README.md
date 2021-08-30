@@ -70,10 +70,10 @@ dependencies {
 
 > Checkout the custom thumbnail layout sample to see more detail [here](https://github.com/nimblehq/recent-apps-thumbnail-hiding/blob/master/app/src/main/res/layout/activity_main.xml#L26-L33)
 
-### Low API support (25 and lowers)
+### Low API support (25 and lower)
 
 The core approach `HardwareKeyWatcher` in this
-lib [doesn't work on API 25 and lowers](https://docs.google.com/spreadsheets/d/1znmSllEYHuOhmla7EWFXYeWuv1EZQiVkB9Mibhcj52s/edit?usp=sharing)
+lib [doesn't work on API 25 and lower](https://docs.google.com/spreadsheets/d/1znmSllEYHuOhmla7EWFXYeWuv1EZQiVkB9Mibhcj52s/edit?usp=sharing)
 . In order to provide an option to cover the hiding app thumbnail on more and more devices, this lib adds support to
 apply [FLAG_SECURE](https://developer.android.com/reference/android/view/WindowManager.LayoutParams#FLAG_SECURE).
 
@@ -83,7 +83,7 @@ apply [FLAG_SECURE](https://developer.android.com/reference/android/view/WindowM
     ```kotlin
     class MainActivity : RecentAppsThumbnailHidingActivity() {
 
-        // On API 25 and lowers: use FLAG_SECURE
+        // On API 25 and lower: use FLAG_SECURE
         override val enableSecureFlagOnLowApiDevices: Boolean = true
 
         // On API 26 or later: use custom app logo
