@@ -82,10 +82,10 @@ More testing insight could be found [here](https://docs.google.com/spreadsheets/
 In order to provide an option to cover the hiding app thumbnail on more and more devices,
 this lib adds support to apply [FLAG_SECURE](https://developer.android.com/reference/android/view/WindowManager.LayoutParams#FLAG_SECURE).
 
-This support is provided as an *option* and *disabled* by default, to enable it,
-extend your activity to `RecentAppsThumbnailHidingActivity`
-and override `enableSecureFlagOnLowApiDevices = true`,
-`enableSecureFlagOnDevicesWithCustomGestureNavigation = true`, or both.
+This support is provided as an *option* and *disabled* by default, to enable it:
+
+1. extend your activity to `RecentAppsThumbnailHidingActivity`.
+2. override `enableSecureFlagOnLowApiDevices = true`, `enableSecureFlagOnCustomGestureNavigationDevices = true`, or both.
 
     ```kotlin
     class MainActivity : RecentAppsThumbnailHidingActivity() {
@@ -94,7 +94,7 @@ and override `enableSecureFlagOnLowApiDevices = true`,
         override val enableSecureFlagOnLowApiDevices: Boolean = true
 
         // On some Huawei/Xiaomi devices with custom gesture navigation: use FLAG_SECURE
-        override val enableSecureFlagOnDevicesWithCustomGestureNavigation = true
+        override val enableSecureFlagOnCustomGestureNavigationDevices = true
 
         // The rest: show custom app logo
         override fun onRecentAppsTriggered(activity: Activity, inRecentAppsMode: Boolean) {

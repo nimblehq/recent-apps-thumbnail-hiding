@@ -17,14 +17,16 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         if (NavigationBarObserver.isAvailable()) {
             if (navigationBarObserver?.activityContext != activity) {
-                navigationBarObserver?.unregister()
-                navigationBarObserver?.removeOnNavigationBarListener(navigationBarListener)
+                navigationBarObserver?.run {
+                    unregister()
+                    removeOnNavigationBarListener(navigationBarListener)
+                }
                 navigationBarObserver = null
                 navigationBarListener = null
             }
             navigationBarListener = OnNavigationBarListener { isGestureEnabled ->
                 if (activity is RecentAppsThumbnailHidingActivity
-                    && activity.enableSecureFlagOnDevicesWithCustomGestureNavigation
+                    && activity.enableSecureFlagOnCustomGestureNavigationDevices
                 ) {
                     activity.enableSecureFlag(isGestureEnabled)
                 }
@@ -82,8 +84,10 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
 
     override fun onActivityDestroyed(activity: Activity) {
         if (NavigationBarObserver.isAvailable() && navigationBarObserver?.activityContext == activity) {
-            navigationBarObserver?.unregister()
-            navigationBarObserver?.removeOnNavigationBarListener(navigationBarListener)
+            navigationBarObserver?.run {
+                unregister()
+                removeOnNavigationBarListener(navigationBarListener)
+            }
             navigationBarObserver = null
             navigationBarListener = null
         }

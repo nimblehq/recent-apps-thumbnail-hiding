@@ -20,17 +20,17 @@ abstract class RecentAppsThumbnailHidingActivity : AppCompatActivity(),
      * HardwareKeyWatcher doesn't work on some Xiaomi or Huawei devices with custom gesture navigation enabled,
      * allow to use FLAG_SECURE instead to hide app thumbnail.
      */
-    open val enableSecureFlagOnDevicesWithCustomGestureNavigation: Boolean = false
+    open val enableSecureFlagOnCustomGestureNavigationDevices: Boolean = false
 
     private val isSecureFlagOnLowApiDevicesEnabled: Boolean
         get() = enableSecureFlagOnLowApiDevices && Build.VERSION.SDK_INT < Build.VERSION_CODES.O
 
-    private val isSecureFlagOnDevicesWithCustomGestureNavigationEnabled: Boolean
-        get() = enableSecureFlagOnDevicesWithCustomGestureNavigation && isGestureEnabled(this)
+    private val isSecureFlagOnCustomGestureNavigationDevicesEnabled: Boolean
+        get() = enableSecureFlagOnCustomGestureNavigationDevices && isGestureEnabled(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (isSecureFlagOnLowApiDevicesEnabled || isSecureFlagOnDevicesWithCustomGestureNavigationEnabled) {
+        if (isSecureFlagOnLowApiDevicesEnabled || isSecureFlagOnCustomGestureNavigationDevicesEnabled) {
             enableSecureFlag(true)
         }
     }

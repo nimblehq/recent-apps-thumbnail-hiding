@@ -10,7 +10,7 @@ class MainActivity : RecentAppsThumbnailHidingActivity() {
 
     override val enableSecureFlagOnLowApiDevices: Boolean = true
 
-    override val enableSecureFlagOnDevicesWithCustomGestureNavigation: Boolean = true
+    override val enableSecureFlagOnCustomGestureNavigationDevices: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
