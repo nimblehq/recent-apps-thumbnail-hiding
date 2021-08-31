@@ -17,12 +17,7 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
         if (NavigationBarObserver.isAvailable()) {
             if (navigationBarObserver?.activityContext != activity) {
-                navigationBarObserver?.run {
-                    unregister()
-                    removeOnNavigationBarListener(navigationBarListener)
-                }
-                navigationBarObserver = null
-                navigationBarListener = null
+                disposeNavigationBarObserver()
             }
             navigationBarListener = OnNavigationBarListener { isGestureEnabled ->
                 if (activity is RecentAppsThumbnailHidingActivity
@@ -40,8 +35,7 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
 
     override fun onActivityStarted(activity: Activity) {
         if (hardwareKeyWatcher?.context != activity) {
-            hardwareKeyWatcher?.stopWatch()
-            hardwareKeyWatcher = null
+            disposeHardwareKeyWatcher()
         }
         hardwareKeyWatcher = HardwareKeyWatcher(activity).apply {
             setOnHardwareKeysPressedListenerListener(object :
@@ -74,8 +68,7 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
 
     override fun onActivityStopped(activity: Activity) {
         if (hardwareKeyWatcher?.context == activity) {
-            hardwareKeyWatcher?.stopWatch()
-            hardwareKeyWatcher = null
+            disposeHardwareKeyWatcher()
         }
     }
 
@@ -84,13 +77,22 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
 
     override fun onActivityDestroyed(activity: Activity) {
         if (NavigationBarObserver.isAvailable() && navigationBarObserver?.activityContext == activity) {
-            navigationBarObserver?.run {
-                unregister()
-                removeOnNavigationBarListener(navigationBarListener)
-            }
-            navigationBarObserver = null
-            navigationBarListener = null
+            disposeNavigationBarObserver()
         }
+    }
+
+    private fun disposeHardwareKeyWatcher() {
+        hardwareKeyWatcher?.stopWatch()
+        hardwareKeyWatcher = null
+    }
+
+    private fun disposeNavigationBarObserver() {
+        navigationBarObserver?.run {
+            unregister()
+            removeOnNavigationBarListener(navigationBarListener)
+        }
+        navigationBarObserver = null
+        navigationBarListener = null
     }
 
     /**
