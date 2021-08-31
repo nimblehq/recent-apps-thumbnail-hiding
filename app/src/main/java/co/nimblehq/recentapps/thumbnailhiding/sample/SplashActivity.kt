@@ -1,4 +1,4 @@
-package co.nimblehq.recentapps.thumbnailhiding
+package co.nimblehq.recentapps.thumbnailhiding.sample
 
 import android.content.Intent
 import android.os.Bundle

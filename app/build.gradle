@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.2"
 
     defaultConfig {
-        applicationId "co.nimblehq.recentapps.thumbnailhiding"
+        applicationId "co.nimblehq.recentapps.thumbnailhiding.sample"
         minSdkVersion 14
         targetSdkVersion 29
         versionCode 1
