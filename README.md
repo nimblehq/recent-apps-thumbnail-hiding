@@ -70,23 +70,33 @@ dependencies {
 
 > Checkout the custom thumbnail layout sample to see more detail [here](https://github.com/nimblehq/recent-apps-thumbnail-hiding/blob/master/app/src/main/res/layout/activity_main.xml#L26-L33)
 
-### Low API support (25 and lower)
+### Exceptions handling
 
-The core approach `HardwareKeyWatcher` in this
-lib [doesn't work on API 25 and lower](https://docs.google.com/spreadsheets/d/1znmSllEYHuOhmla7EWFXYeWuv1EZQiVkB9Mibhcj52s/edit?usp=sharing)
-. In order to provide an option to cover the hiding app thumbnail on more and more devices, this lib adds support to
-apply [FLAG_SECURE](https://developer.android.com/reference/android/view/WindowManager.LayoutParams#FLAG_SECURE).
+The core approach `HardwareKeyWatcher` in this lib does not work on all devices.
+There are some failed cases listed as below:
 
-- This support is provided as an *option* and *disabled* by default, to enable it, extend your activity 
-  to `RecentAppsThumbnailHidingActivity` and override `enableSecureFlagOnLowApiDevices = true`.
+- [Low API devices](https://github.com/nimblehq/recent-apps-thumbnail-hiding/issues/9): Android 7.1 (API 25) and lower.
+- [Custom gesture navigation on some Huawei/Xiaomi devices](https://github.com/nimblehq/recent-apps-thumbnail-hiding/issues/8): EMUI or MIUI roms.
+
+More testing insight could be found [here](https://docs.google.com/spreadsheets/d/1znmSllEYHuOhmla7EWFXYeWuv1EZQiVkB9Mibhcj52s/edit?usp=sharing).
+In order to provide an option to cover the hiding app thumbnail on more and more devices,
+this lib adds support to apply [FLAG_SECURE](https://developer.android.com/reference/android/view/WindowManager.LayoutParams#FLAG_SECURE).
+
+This support is provided as an *option* and *disabled* by default, to enable it:
+
+1. extend your activity to `RecentAppsThumbnailHidingActivity`.
+2. override `enableSecureFlagOnLowApiDevices = true`, `enableSecureFlagOnCustomGestureNavigationDevices = true`, or both.
 
     ```kotlin
     class MainActivity : RecentAppsThumbnailHidingActivity() {
 
-        // On API 25 and lower: use FLAG_SECURE
+        // On devices with API 25 and lower: use FLAG_SECURE
         override val enableSecureFlagOnLowApiDevices: Boolean = true
 
-        // On API 26 or later: use custom app logo
+        // On some Huawei/Xiaomi devices with custom gesture navigation: use FLAG_SECURE
+        override val enableSecureFlagOnCustomGestureNavigationDevices = true
+
+        // The rest: show custom app logo
         override fun onRecentAppsTriggered(activity: Activity, inRecentAppsMode: Boolean) {
             ivRecentAppThumbnail.visibleOrGone(inRecentAppsMode)
         }
@@ -94,13 +104,14 @@ apply [FLAG_SECURE](https://developer.android.com/reference/android/view/WindowM
     }
     ```
 
-> ⚠️ Note that, besides supporting to hide app thumbnail, this flag will not support to
-show a custom Recent Apps thumbnail layout, also blocks the user to capture app screenshot.
+> ⚠️ Note that, besides supporting to hide app thumbnail, this flag
+**will not support to show a custom Recent Apps thumbnail layout**,
+also **blocks the user to capture app screenshot**.
 
 ## License
 
-This project is Copyright (c) 2014-2021 Nimble. It is free software, and may be redistributed under the terms specified
-in the [LICENSE] file.
+This project is Copyright (c) 2014-2021 Nimble. It is free software,
+and may be redistributed under the terms specified in the [LICENSE] file.
 
 [LICENSE]: /LICENSE
 

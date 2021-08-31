@@ -3,12 +3,39 @@ package co.nimblehq.recentapps.thumbnailhiding
 import android.app.Activity
 import android.app.Application
 import android.os.Bundle
+import co.nimblehq.recentapps.thumbnailhiding.navbar.NavigationBarObserver
+import co.nimblehq.recentapps.thumbnailhiding.navbar.OnNavigationBarListener
 
 class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleCallbacks {
 
     private var hardwareKeyWatcher: HardwareKeyWatcher? = null
 
+    // Detect custom gesture navigation enabled on Xiaomi or Huawei devices to switch to use FLAG_SECURE
+    private var navigationBarObserver: NavigationBarObserver? = null
+    private var navigationBarListener: OnNavigationBarListener? = null
+
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {
+        if (NavigationBarObserver.isAvailable()) {
+            if (navigationBarObserver?.activityContext != activity) {
+                navigationBarObserver?.run {
+                    unregister()
+                    removeOnNavigationBarListener(navigationBarListener)
+                }
+                navigationBarObserver = null
+                navigationBarListener = null
+            }
+            navigationBarListener = OnNavigationBarListener { isGestureEnabled ->
+                if (activity is RecentAppsThumbnailHidingActivity
+                    && activity.enableSecureFlagOnCustomGestureNavigationDevices
+                ) {
+                    activity.enableSecureFlag(isGestureEnabled)
+                }
+            }
+            navigationBarObserver = NavigationBarObserver.getInstance().apply {
+                register(activity)
+                addOnNavigationBarListener(navigationBarListener)
+            }
+        }
     }
 
     override fun onActivityStarted(activity: Activity) {
@@ -56,6 +83,14 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
     }
 
     override fun onActivityDestroyed(activity: Activity) {
+        if (NavigationBarObserver.isAvailable() && navigationBarObserver?.activityContext == activity) {
+            navigationBarObserver?.run {
+                unregister()
+                removeOnNavigationBarListener(navigationBarListener)
+            }
+            navigationBarObserver = null
+            navigationBarListener = null
+        }
     }
 
     /**
@@ -65,7 +100,7 @@ class RecentAppsThumbnailHidingLifecycleTracker : Application.ActivityLifecycleC
      */
     private fun Activity.triggerRecentAppsMode(inRecentAppsMode: Boolean) {
         when (val activity = this) {
-            is RecentAppsThumbnailHidingActivity -> if (!activity.isSecureFlagEnabled)
+            is RecentAppsThumbnailHidingActivity -> if (!activity.isSecureFlagEnabled())
                 activity.onRecentAppsTriggered(activity, inRecentAppsMode)
             is RecentAppsThumbnailHidingListener ->
                 activity.onRecentAppsTriggered(activity, inRecentAppsMode)

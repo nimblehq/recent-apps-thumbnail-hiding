@@ -1,7 +1,6 @@
 package co.nimblehq.recentapps.thumbnailhiding
 
 import android.app.Activity
-import android.view.WindowManager
 
 interface RecentAppsThumbnailHidingListener {
 
@@ -15,18 +14,5 @@ interface RecentAppsThumbnailHidingListener {
         inRecentAppsMode: Boolean
     ) {
         activity.enableSecureFlag(inRecentAppsMode)
-    }
-
-    fun Activity.enableSecureFlag(isEnabled: Boolean) {
-        if (isEnabled) {
-            window.setFlags(
-                WindowManager.LayoutParams.FLAG_SECURE,
-                WindowManager.LayoutParams.FLAG_SECURE
-            )
-        } else {
-            window.clearFlags(
-                WindowManager.LayoutParams.FLAG_SECURE
-            )
-        }
     }
 }
