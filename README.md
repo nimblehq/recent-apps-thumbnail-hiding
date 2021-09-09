@@ -4,7 +4,13 @@
 
 Hide app thumbnail in [Android Recent Apps](https://developer.android.com/guide/components/activities/recents)
 
+Since our privacy is always in question, there are some applications - especially digital banking and wallet applications - that show some sensitive information that must NOT be shown on the "Recent Tasks" screen when stopping the app by pressing the home button. Instead, they will try to show a custom app logo as an app thumbnail in Recents Screen.
+
 ![20201014_171755](https://user-images.githubusercontent.com/16315358/95976377-9c20f200-0e41-11eb-99e3-bf1abf6406df.gif)
+
+There is no clear support from Android at the official API level, only a [FLAG_SECURE](https://developer.android.com/reference/android/view/WindowManager.LayoutParams#FLAG_SECURE) that was initially introduced to prevent DRM-protected content from appearing in screenshots, video screencaps, or from being viewed on “non-secure displays” such as Recents Screen; and this flag does not support to show custom app UI in Recents Screen, only blank.
+
+There is an approach to archive this requirement besides using that flag is [HardwareKeyWatcher](https://github.com/nimblehq/recent-apps-thumbnail-hiding/blob/a2a640918a992c2950439dc4d5747c71a64ef682/lib/src/main/java/co/nimblehq/recentapps/thumbnailhiding/HardwareKeyWatcher.java) but it can not cover all of the cases due to fragmented device configurations and custom ROMs, then we have to fulfill missing cases with other approaches. To ease the way of implementation, we had built a lib for [Recent Apps thumbnail hiding](https://github.com/nimblehq/recent-apps-thumbnail-hiding) mechanism, which supports implement a custom layout to show an empty screen with the app's logo when the app is going to Recents Screen.
 
 ## Installation
 
