@@ -34,7 +34,7 @@ public class HardwareKeyWatcher {
     public void startWatch() {
         if (mReceiver != null) {
             logForDebugging("startWatch on " + mContext);
-            mContext.registerReceiver(mReceiver, mFilter);
+            mContext.registerReceiver(mReceiver, mFilter, Context.RECEIVER_EXPORTED);
         }
     }
 
